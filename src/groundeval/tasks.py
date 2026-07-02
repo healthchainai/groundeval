@@ -1,9 +1,10 @@
 """Eval task definitions.
 
-A task owns three things: the prompt it puts to the agent, the ground truth it
-derives from the case data, and how the agent's raw output is parsed into
-comparable values. Adding a task type means adding a class with these three
-methods — the runner and scorers don't change.
+A task owns everything about its values: the prompt it puts to the agent, the
+ground truth it derives from the case data, how the agent's raw output is
+parsed into comparable values, and how those values are shaped for recording
+(`empty_output`, `record`). Adding a task type means adding a class with these
+methods — the runner stays value-agnostic and doesn't change.
 """
 
 import json
@@ -68,6 +69,14 @@ class MedicationExtractionTask:
             coding = concept.coding[0]
             meds.add(Medication(rxnorm_code=str(coding.code), name=str(coding.display or "")))
         return meds
+
+    def empty_output(self) -> set[Medication]:
+        """What "no prediction" looks like, e.g. when the agent call fails."""
+        return set()
+
+    def record(self, values: set[Medication]) -> list[Medication]:
+        """Stable ordered form of task values for run records and traces."""
+        return sorted(values, key=lambda m: m.rxnorm_code)
 
     def parse_output(self, raw: str) -> set[Medication]:
         """Parse the agent's JSON reply into Medication values.

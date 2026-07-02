@@ -38,8 +38,8 @@ src/groundeval/
   datasets.py   # fixture bundles → validated EvalCases (via healthchain.fhir)
   tasks.py      # a task = prompt + ground truth + output parsing
   agents.py     # an agent = name + run(prompt) -> text
-  scorers.py    # a scorer = score(predicted, truth) -> Score
-  runner.py     # orchestrates task × agent × scorer, aggregates
+  scorers.py    # a scorer = score(predicted, truth) -> Score + summarize(scores)
+  runner.py     # orchestrates task × agent × scorer; value- and score-agnostic
   tracing.py    # LangSmith when configured, local JSON always
   cli.py        # `uv run groundeval`
 ```

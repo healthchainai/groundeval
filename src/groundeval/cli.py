@@ -44,12 +44,7 @@ def main() -> int:
         if c.error:
             print(f"  {c.case_id}  ERROR: {c.error}")
         else:
-            s = c.score
-            print(
-                f"  {c.case_id}  exact={str(s.exact_match):5}  "
-                f"P={s.precision:.2f} R={s.recall:.2f} F1={s.f1:.2f}  "
-                f"names={s.name_accuracy:.2f}  ({c.duration_s}s)"
-            )
+            print(f"  {c.case_id}  {c.score.summary_line()}  ({c.duration_s}s)")
     print("-" * 72)
     for k, v in result.summary.items():
         print(f"  {k}: {v}")

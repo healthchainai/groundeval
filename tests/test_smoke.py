@@ -61,6 +61,11 @@ def test_scorer():
     empty = scorer.score(set(), set())
     assert empty.exact_match and empty.precision == 1.0 and empty.recall == 1.0
 
+    summary = scorer.summarize([s, empty])
+    assert summary["exact_match_rate"] == 0.5
+    assert summary["mean_precision"] == 0.75
+    assert "F1=" in s.summary_line()
+
 
 def test_offline_slice(tmp_path):
     cases = load_cases()[:2]

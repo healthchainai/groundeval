@@ -43,7 +43,7 @@ def run_case(task, agent, scorer, case: EvalCase) -> CaseResult:
     """
     truth = task.ground_truth(case)
     start = time.monotonic()
-    raw, predicted, score, error = "", set(), None, None
+    raw, predicted, score, error = "", task.empty_output(), None, None
     try:
         raw = agent.run(task.prompt(case))
         predicted = task.parse_output(raw)
@@ -53,8 +53,8 @@ def run_case(task, agent, scorer, case: EvalCase) -> CaseResult:
         logger.error("Case %s failed: %s", case.case_id, error)
     return CaseResult(
         case_id=case.case_id,
-        ground_truth=sorted(truth, key=lambda m: m.rxnorm_code),
-        predicted=sorted(predicted, key=lambda m: m.rxnorm_code),
+        ground_truth=task.record(truth),
+        predicted=task.record(predicted),
         raw_output=raw,
         score=score,
         error=error,
@@ -62,18 +62,13 @@ def run_case(task, agent, scorer, case: EvalCase) -> CaseResult:
     )
 
 
-def summarize(results: list[CaseResult]) -> dict:
+def summarize(results: list[CaseResult], scorer) -> dict:
+    """Run-level counts plus whatever aggregation the scorer defines."""
     scored = [r.score for r in results if r.score is not None]
-    n = len(scored)
-    mean = lambda xs: round(sum(xs) / n, 4) if n else 0.0  # noqa: E731
     return {
         "n_cases": len(results),
-        "n_errors": len(results) - n,
-        "exact_match_rate": mean([s.exact_match for s in scored]),
-        "mean_precision": mean([s.precision for s in scored]),
-        "mean_recall": mean([s.recall for s in scored]),
-        "mean_f1": mean([s.f1 for s in scored]),
-        "mean_name_accuracy": mean([s.name_accuracy for s in scored]),
+        "n_errors": len(results) - len(scored),
+        **scorer.summarize(scored),
     }
 
 
@@ -83,9 +78,9 @@ def run(task, agent, scorer, cases: list[EvalCase], out_dir: str = "runs") -> Ru
     for case in cases:
         case_result = run_case(task, agent, scorer, case)
         result.cases.append(case_result)
-        status = "ERROR" if case_result.error else f"f1={case_result.score.f1:.2f}"
+        status = "ERROR" if case_result.error else case_result.score.summary_line()
         logger.info("Case %s: %s (%.1fs)", case.case_id, status, case_result.duration_s)
-    result.summary = summarize(result.cases)
+    result.summary = summarize(result.cases, scorer)
 
     record = {
         "task": result.task,
