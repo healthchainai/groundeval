@@ -1,8 +1,11 @@
 # HealthChain friction log — groundeval v0.1
 
 Raw notes from building v0.1 against `healthchain.fhir` (PyPI 0.15.0). Two
-channels, per the build spec. Channel 1 entries are written issue-ready for
-`healthchainai/HealthChain`; none have been filed yet.
+channels, per the build spec. Channel 1 entries have been filed to
+`healthchainai/HealthChain`: stub 1 →
+[#232](https://github.com/healthchainai/HealthChain/issues/232), stub 2 →
+[#233](https://github.com/healthchainai/HealthChain/issues/233), stub 3 →
+[#234](https://github.com/healthchainai/HealthChain/issues/234).
 
 ## Channel 1 — data / scoring friction
 
