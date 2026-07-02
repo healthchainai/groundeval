@@ -1,0 +1,13 @@
+# python
+__pycache__/
+*.pyc
+.venv/
+dist/
+*.egg-info/
+.pytest_cache/
+
+# secrets
+.env
+
+# local run records
+runs/

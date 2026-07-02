@@ -1,0 +1,26 @@
+[project]
+name = "groundeval"
+version = "0.1.0"
+description = "An open-source eval harness for healthcare AI agents, grounded in real clinical data standards"
+readme = "README.md"
+authors = [
+    { name = "jenniferjiangkells", email = "jenniferjiangkells@gmail.com" }
+]
+requires-python = ">=3.11"
+dependencies = [
+    "anthropic>=0.115.1",
+    "healthchain>=0.15.0",
+    "langsmith>=0.9.6",
+]
+
+[project.scripts]
+groundeval = "groundeval.cli:main"
+
+[build-system]
+requires = ["uv_build>=0.10.2,<0.11.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+]
