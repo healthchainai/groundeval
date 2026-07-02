@@ -1,6 +1,6 @@
 [project]
 name = "groundeval"
-version = "0.1.0"
+version = "0.2.0"
 description = "An open-source eval harness for healthcare AI agents, grounded in real clinical data standards"
 readme = "README.md"
 authors = [
@@ -10,6 +10,8 @@ requires-python = ">=3.11"
 dependencies = [
     "anthropic>=0.115.1",
     "healthchain>=0.15.0",
+    "langchain-anthropic>=1.4.8",
+    "langgraph>=1.2.7",
     "langsmith>=0.9.6",
 ]
 

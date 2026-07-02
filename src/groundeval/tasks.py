@@ -14,9 +14,17 @@ from dataclasses import dataclass
 
 from healthchain.fhir import get_resources
 
-from groundeval.datasets import EvalCase
+from groundeval.datasets import EvalCase, WriteCase
 
 logger = logging.getLogger(__name__)
+
+
+def _json_object(raw: str) -> dict:
+    """Extract the JSON object from agent output, tolerating fences and prose."""
+    match = re.search(r"\{.*\}", raw.strip(), re.DOTALL)
+    if not match:
+        raise ValueError(f"No JSON object in agent output: {raw.strip()[:200]!r}")
+    return json.loads(match.group(0))
 
 
 @dataclass(frozen=True)
@@ -85,12 +93,101 @@ class MedicationExtractionTask:
         parseable JSON object is found so the runner can record a failed case
         rather than a silently empty prediction.
         """
-        text = raw.strip()
-        match = re.search(r"\{.*\}", text, re.DOTALL)
-        if not match:
-            raise ValueError(f"No JSON object in agent output: {text[:200]!r}")
-        payload = json.loads(match.group(0))
+        payload = _json_object(raw)
         return {
             Medication(rxnorm_code=str(m.get("rxnorm_code", "")), name=str(m.get("name", "")))
             for m in payload.get("active_medications", [])
         }
+
+
+@dataclass(frozen=True)
+class DosageSpec:
+    """The regimen the source text documents: dose per administration."""
+
+    dose_value: float
+    dose_unit: str
+    frequency_per_day: float
+
+
+@dataclass(frozen=True)
+class WriteExpectation:
+    """Ground truth for one write case.
+
+    `max_daily_dose` (in `dose_unit`) is a per-drug safety ceiling, not part
+    of the narrative — it exists so the scorer can catch unit and arithmetic
+    errors (81 g instead of 81 mg) that are perfectly valid FHIR.
+    """
+
+    subject: str
+    rxnorm_code: str
+    display: str
+    status: str
+    dosage: DosageSpec | None
+    max_daily_dose: float | None
+
+
+class WriteAndValidateTask:
+    """Generate a FHIR MedicationStatement from a clinical note excerpt.
+
+    The inverse of extraction: instead of reading structured data, the agent
+    must *write* it — find the right RxNorm code (via lookup, not memory),
+    pick a status that reflects the narrative, and encode the documented
+    regimen as structured dosage. Ground truth is the committed expectation
+    block for each case; scoring is deterministic against it.
+
+    The prompt states the site's write policy because an agent can only be
+    held to rules it was given. It never contains expected values.
+    """
+
+    name = "write-and-validate"
+
+    def prompt(self, case: WriteCase) -> str:
+        return (
+            "You are a clinical data engineer agent writing to a hospital EHR.\n"
+            "Given a clinical note excerpt about ONE medication, produce the FHIR R4B "
+            "MedicationStatement resource that documents it.\n\n"
+            f"Patient: {case.subject}\n"
+            f"Clinical note: {case.input_text}\n\n"
+            "Site write policy (every write is checked against this):\n"
+            "- The medication must be coded in RxNorm. Find the code with the lookup "
+            "tool using the site catalog — never guess or recall a code. Use the "
+            "catalog's code and display name exactly.\n"
+            f"- The resource must reference exactly this patient: {case.subject}.\n"
+            "- status must be a valid R4B MedicationStatement status and accurately "
+            "reflect the note (e.g. currently taking vs. finished vs. stopped vs. denies "
+            "taking).\n"
+            "- If the note documents how the medication is or was taken, include "
+            "structured dosage: the dose actually taken per single administration, its "
+            "unit, and administrations per day. If the note documents no regimen, do "
+            "not invent one.\n\n"
+            "Build the resource with the tools and validate it before answering.\n"
+            "Final answer: ONLY the MedicationStatement resource JSON, no other text."
+        )
+
+    def ground_truth(self, case: WriteCase) -> WriteExpectation:
+        e = case.expected
+        dosage = DosageSpec(**e["dosage"]) if e["dosage"] else None
+        return WriteExpectation(
+            subject=case.subject,
+            rxnorm_code=e["rxnorm_code"],
+            display=e["display"],
+            status=e["status"],
+            dosage=dosage,
+            max_daily_dose=e["max_daily_dose"],
+        )
+
+    def empty_output(self) -> dict:
+        """What "no prediction" looks like, e.g. when the agent call fails."""
+        return {}
+
+    def record(self, values) -> object:
+        """Both value shapes (expectation dataclass, resource dict) are
+        JSON-serializable as-is by the tracing layer."""
+        return values
+
+    def parse_output(self, raw: str) -> dict:
+        """The agent's final answer is the generated resource itself."""
+        resource = _json_object(raw)
+        if not isinstance(resource, dict):
+            raise ValueError(f"Agent output is not a JSON object: {raw[:200]!r}")
+        return resource

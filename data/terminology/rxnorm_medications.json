@@ -1,0 +1,152 @@
+[
+  {
+    "code": "866412",
+    "display": "24 HR metoprolol succinate 100 MG Extended Release Oral Tablet",
+    "system": "http://www.nlm.nih.gov/research/umls/rxnorm"
+  },
+  {
+    "code": "866427",
+    "display": "24 HR metoprolol succinate 25 MG Extended Release Oral Tablet",
+    "system": "http://www.nlm.nih.gov/research/umls/rxnorm"
+  },
+  {
+    "code": "313820",
+    "display": "Acetaminophen 160 MG Chewable Tablet",
+    "system": "http://www.nlm.nih.gov/research/umls/rxnorm"
+  },
+  {
+    "code": "1043400",
+    "display": "Acetaminophen 21.7 MG/ML / Dextromethorphan Hydrobromide 1 MG/ML / doxylamine succinate 0.417 MG/ML Oral Solution",
+    "system": "http://www.nlm.nih.gov/research/umls/rxnorm"
+  },
+  {
+    "code": "993770",
+    "display": "Acetaminophen 300 MG / Codeine Phosphate 15 MG Oral Tablet",
+    "system": "http://www.nlm.nih.gov/research/umls/rxnorm"
+  },
+  {
+    "code": "209387",
+    "display": "Acetaminophen 325 MG Oral Tablet [Tylenol]",
+    "system": "http://www.nlm.nih.gov/research/umls/rxnorm"
+  },
+  {
+    "code": "197319",
+    "display": "Allopurinol 100 MG Oral Tablet",
+    "system": "http://www.nlm.nih.gov/research/umls/rxnorm"
+  },
+  {
+    "code": "308136",
+    "display": "amLODIPine 2.5 MG Oral Tablet",
+    "system": "http://www.nlm.nih.gov/research/umls/rxnorm"
+  },
+  {
+    "code": "562251",
+    "display": "Amoxicillin 250 MG / Clavulanate 125 MG Oral Tablet",
+    "system": "http://www.nlm.nih.gov/research/umls/rxnorm"
+  },
+  {
+    "code": "308192",
+    "display": "Amoxicillin 500 MG Oral Tablet",
+    "system": "http://www.nlm.nih.gov/research/umls/rxnorm"
+  },
+  {
+    "code": "243670",
+    "display": "aspirin 81 MG Oral Tablet",
+    "system": "http://www.nlm.nih.gov/research/umls/rxnorm"
+  },
+  {
+    "code": "309362",
+    "display": "Clopidogrel 75 MG Oral Tablet",
+    "system": "http://www.nlm.nih.gov/research/umls/rxnorm"
+  },
+  {
+    "code": "997488",
+    "display": "Fexofenadine hydrochloride 30 MG Oral Tablet",
+    "system": "http://www.nlm.nih.gov/research/umls/rxnorm"
+  },
+  {
+    "code": "310436",
+    "display": "Galantamine 4 MG Oral Tablet",
+    "system": "http://www.nlm.nih.gov/research/umls/rxnorm"
+  },
+  {
+    "code": "310798",
+    "display": "Hydrochlorothiazide 25 MG Oral Tablet",
+    "system": "http://www.nlm.nih.gov/research/umls/rxnorm"
+  },
+  {
+    "code": "310965",
+    "display": "Ibuprofen 200 MG Oral Tablet",
+    "system": "http://www.nlm.nih.gov/research/umls/rxnorm"
+  },
+  {
+    "code": "314076",
+    "display": "lisinopril 10 MG Oral Tablet",
+    "system": "http://www.nlm.nih.gov/research/umls/rxnorm"
+  },
+  {
+    "code": "979485",
+    "display": "losartan potassium 25 MG Oral Tablet",
+    "system": "http://www.nlm.nih.gov/research/umls/rxnorm"
+  },
+  {
+    "code": "996740",
+    "display": "Memantine hydrochloride 2 MG/ML Oral Solution",
+    "system": "http://www.nlm.nih.gov/research/umls/rxnorm"
+  },
+  {
+    "code": "198014",
+    "display": "Naproxen 500 MG Oral Tablet",
+    "system": "http://www.nlm.nih.gov/research/umls/rxnorm"
+  },
+  {
+    "code": "849574",
+    "display": "Naproxen sodium 220 MG Oral Tablet",
+    "system": "http://www.nlm.nih.gov/research/umls/rxnorm"
+  },
+  {
+    "code": "1870230",
+    "display": "NDA020800 0.3 ML Epinephrine 1 MG/ML Auto-Injector",
+    "system": "http://www.nlm.nih.gov/research/umls/rxnorm"
+  },
+  {
+    "code": "705129",
+    "display": "Nitroglycerin 0.4 MG/ACTUAT Mucosal Spray",
+    "system": "http://www.nlm.nih.gov/research/umls/rxnorm"
+  },
+  {
+    "code": "855812",
+    "display": "prasugrel 10 MG Oral Tablet",
+    "system": "http://www.nlm.nih.gov/research/umls/rxnorm"
+  },
+  {
+    "code": "859419",
+    "display": "rosuvastatin calcium 40 MG Oral Tablet",
+    "system": "http://www.nlm.nih.gov/research/umls/rxnorm"
+  },
+  {
+    "code": "314231",
+    "display": "Simvastatin 10 MG Oral Tablet",
+    "system": "http://www.nlm.nih.gov/research/umls/rxnorm"
+  },
+  {
+    "code": "312961",
+    "display": "Simvastatin 20 MG Oral Tablet",
+    "system": "http://www.nlm.nih.gov/research/umls/rxnorm"
+  },
+  {
+    "code": "978950",
+    "display": "{5 (dienogest 2 MG / estradiol valerate 2 MG Oral Tablet) / 17 (dienogest 3 MG / estradiol valerate 2 MG Oral Tablet) / 2 (estradiol valerate 1 MG Oral Tablet) / 2 (estradiol valerate 3 MG Oral Tablet) / 2 (inert ingredients 1 MG Oral Tablet) } Pack [Natazia 28 Day]",
+    "system": "http://www.nlm.nih.gov/research/umls/rxnorm"
+  },
+  {
+    "code": "749762",
+    "display": "{7 (ethinyl estradiol 0.01 MG Oral Tablet) / 84 (ethinyl estradiol 0.03 MG / levonorgestrel 0.15 MG Oral Tablet) } Pack [Seasonique]",
+    "system": "http://www.nlm.nih.gov/research/umls/rxnorm"
+  },
+  {
+    "code": "751905",
+    "display": "{7 (ethinyl estradiol 0.035 MG / norgestimate 0.18 MG Oral Tablet) / 7 (ethinyl estradiol 0.035 MG / norgestimate 0.215 MG Oral Tablet) / 7 (ethinyl estradiol 0.035 MG / norgestimate 0.25 MG Oral Tablet) / 7 (inert ingredients 1 MG Oral Tablet) } Pack [Trinessa 28 Day]",
+    "system": "http://www.nlm.nih.gov/research/umls/rxnorm"
+  }
+]

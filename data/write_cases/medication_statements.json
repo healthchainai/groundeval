@@ -1,0 +1,101 @@
+{
+  "_comment": [
+    "Write-and-validate fixture set. Each case is one clinical note excerpt about one",
+    "medication; the agent must produce a FHIR R4B MedicationStatement for it.",
+    "`expected` is the scoring ground truth and is never shown to the agent:",
+    "rxnorm_code/display come from data/terminology/rxnorm_medications.json (real",
+    "Synthea RxNorm content), `dosage` is the regimen the note documents (dose per",
+    "single administration), and `max_daily_dose` is a per-drug safety ceiling in",
+    "dose_unit. `dosage: null` means the note documents no regimen, so the resource",
+    "must not contain one. Case selection: an easy active case, a brand-name lookup",
+    "(Tylenol), per-administration dose arithmetic (two tablets), a completed course,",
+    "a stopped medication, a strength disambiguation (25 vs 100 MG ER), and a denial",
+    "(status not-taken, nothing to dose)."
+  ],
+  "cases": [
+    {
+      "case_id": "aspirin-active-daily",
+      "subject": "Patient/pat-001",
+      "input": "Medication history (2026-05-12): Patient takes aspirin 81 mg oral tablet once daily for cardioprotection.",
+      "expected": {
+        "rxnorm_code": "243670",
+        "display": "aspirin 81 MG Oral Tablet",
+        "status": "active",
+        "dosage": {"dose_value": 81, "dose_unit": "mg", "frequency_per_day": 1},
+        "max_daily_dose": 4000
+      }
+    },
+    {
+      "case_id": "tylenol-brand-name",
+      "subject": "Patient/pat-002",
+      "input": "Patient reports taking one Tylenol 325 mg tablet every 6 hours for chronic back pain.",
+      "expected": {
+        "rxnorm_code": "209387",
+        "display": "Acetaminophen 325 MG Oral Tablet [Tylenol]",
+        "status": "active",
+        "dosage": {"dose_value": 325, "dose_unit": "mg", "frequency_per_day": 4},
+        "max_daily_dose": 4000
+      }
+    },
+    {
+      "case_id": "ibuprofen-two-tablets",
+      "subject": "Patient/pat-003",
+      "input": "For knee pain the patient currently takes two 200 mg ibuprofen tablets three times a day.",
+      "expected": {
+        "rxnorm_code": "310965",
+        "display": "Ibuprofen 200 MG Oral Tablet",
+        "status": "active",
+        "dosage": {"dose_value": 400, "dose_unit": "mg", "frequency_per_day": 3},
+        "max_daily_dose": 3200
+      }
+    },
+    {
+      "case_id": "amoxicillin-completed-course",
+      "subject": "Patient/pat-004",
+      "input": "Patient finished a 10-day course of amoxicillin 500 mg three times daily for sinusitis last week.",
+      "expected": {
+        "rxnorm_code": "308192",
+        "display": "Amoxicillin 500 MG Oral Tablet",
+        "status": "completed",
+        "dosage": {"dose_value": 500, "dose_unit": "mg", "frequency_per_day": 3},
+        "max_daily_dose": 3000
+      }
+    },
+    {
+      "case_id": "lisinopril-stopped-cough",
+      "subject": "Patient/pat-005",
+      "input": "Patient stopped taking lisinopril 10 mg once daily last month because of a persistent dry cough.",
+      "expected": {
+        "rxnorm_code": "314076",
+        "display": "lisinopril 10 MG Oral Tablet",
+        "status": "stopped",
+        "dosage": {"dose_value": 10, "dose_unit": "mg", "frequency_per_day": 1},
+        "max_daily_dose": 80
+      }
+    },
+    {
+      "case_id": "metoprolol-er-strength",
+      "subject": "Patient/pat-006",
+      "input": "Current medications include metoprolol succinate extended-release 25 mg, one tablet each morning.",
+      "expected": {
+        "rxnorm_code": "866427",
+        "display": "24 HR metoprolol succinate 25 MG Extended Release Oral Tablet",
+        "status": "active",
+        "dosage": {"dose_value": 25, "dose_unit": "mg", "frequency_per_day": 1},
+        "max_daily_dose": 400
+      }
+    },
+    {
+      "case_id": "ibuprofen-denied",
+      "subject": "Patient/pat-007",
+      "input": "Patient denies taking ibuprofen or any other over-the-counter NSAIDs.",
+      "expected": {
+        "rxnorm_code": "310965",
+        "display": "Ibuprofen 200 MG Oral Tablet",
+        "status": "not-taken",
+        "dosage": null,
+        "max_daily_dose": null
+      }
+    }
+  ]
+}

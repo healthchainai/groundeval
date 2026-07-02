@@ -11,6 +11,9 @@ from healthchain.fhir import create_resource_from_dict
 logger = logging.getLogger(__name__)
 
 DEFAULT_DATA_DIR = Path(__file__).parent.parent.parent / "data" / "synthea"
+DEFAULT_WRITE_CASES_PATH = (
+    Path(__file__).parent.parent.parent / "data" / "write_cases" / "medication_statements.json"
+)
 
 
 @dataclass
@@ -24,6 +27,43 @@ class EvalCase:
     case_id: str
     bundle: Bundle
     bundle_json: str
+
+
+@dataclass
+class WriteCase:
+    """One write-and-validate case: a clinical note excerpt to encode as FHIR.
+
+    `expected` is the scoring ground truth (coding, status, dosage, safety
+    ceiling) straight from the fixture file; the task turns it into a typed
+    expectation and it is never shown to the agent.
+    """
+
+    case_id: str
+    subject: str
+    input_text: str
+    expected: dict
+
+
+def load_write_cases(path: Path | str = DEFAULT_WRITE_CASES_PATH) -> list[WriteCase]:
+    """Load and sanity-check the committed write-and-validate fixture file."""
+    path = Path(path)
+    payload = json.loads(path.read_text())
+    cases = []
+    for raw in payload["cases"]:
+        expected = raw["expected"]
+        missing = {"rxnorm_code", "display", "status", "dosage", "max_daily_dose"} - set(expected)
+        if missing:
+            raise ValueError(f"Case {raw['case_id']}: expected block missing {sorted(missing)}")
+        cases.append(
+            WriteCase(
+                case_id=raw["case_id"],
+                subject=raw["subject"],
+                input_text=raw["input"],
+                expected=expected,
+            )
+        )
+    logger.info("Loaded %d write cases from %s", len(cases), path)
+    return cases
 
 
 def load_cases(data_dir: Path | str = DEFAULT_DATA_DIR) -> list[EvalCase]:
