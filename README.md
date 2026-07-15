@@ -1,4 +1,9 @@
-# groundeval
+<div align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/healthchainai/groundeval/main/assets/brand/hero/readme-hero-dark.png">
+    <img alt="groundeval" src="https://raw.githubusercontent.com/healthchainai/groundeval/main/assets/brand/hero/readme-hero-transparent.png" width="640">
+  </picture>
+</div>
 
 An open-source eval harness for healthcare AI agents, grounded in real clinical data standards.
 

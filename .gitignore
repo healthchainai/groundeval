@@ -11,3 +11,6 @@ dist/
 
 # local run records
 runs/
+
+# os
+.DS_Store
