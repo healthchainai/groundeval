@@ -207,6 +207,30 @@ class TestScorerDimensions:
         assert not s.safety_passed and not s.constraints_met
         assert any("fabricated" in f for f in s.failures)
 
+    def test_stopped_medication_wrong_status_fails_constraints_only(self, scorer, cases):
+        stopped = next(c for c in cases if c.case_id == "lisinopril-stopped-cough")
+        truth = WriteAndValidateTask().ground_truth(stopped)
+        resource = build_expected(stopped)
+
+        resource["status"] = "active"
+
+        s = scorer.score(resource, truth)
+        assert not s.constraints_met
+        assert s.schema_valid and s.coding_correct and s.safety_passed
+        assert any("status" in f and "active" in f for f in s.failures)
+
+    def test_stopped_medication_dosage_still_scores_safety(self, scorer, cases):
+        stopped = next(c for c in cases if c.case_id == "lisinopril-stopped-cough")
+        truth = WriteAndValidateTask().ground_truth(stopped)
+        resource = build_expected(stopped)
+
+        resource["dosage"][0]["timing"]["repeat"]["frequency"] = 2
+
+        s = scorer.score(resource, truth)
+        assert not s.safety_passed
+        assert s.schema_valid and s.coding_correct and s.constraints_met
+        assert any("administrations/day" in f for f in s.failures)
+
     def test_q6h_timing_is_understood(self, scorer, cases):
         # a hand-built resource may encode "every 6 hours" as period=6/h
         # rather than frequency=4/d; the scorer must treat them as equal
